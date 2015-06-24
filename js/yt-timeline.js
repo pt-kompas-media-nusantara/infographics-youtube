@@ -95,7 +95,7 @@ function ytInsertMenu(obj) {
 	menuWrapper.className = 'yt__timeline__menu__wrapper';
 	ytMenuInner.className = 'yt__timeline__menu';
 	menuInnerList.className = 'yt__timeline__list';
-	navNext.className = 'yt__timeline__nav next';
+	navNext.className = 'yt__timeline__nav next active';
 	navPrev.className = 'yt__timeline__nav prev';
 
 	ytMenuInner.appendChild(menuInnerList);
@@ -117,8 +117,8 @@ function ytInsertMenu(obj) {
 
 		element.secondStart = timeToSeconds;
 
-		items.className = (index === 0) ? 'yt__timeline__list__items active' : 'yt__timeline__list__items';
-		items.style.width = (menuInnerWidth / 4) + 'px';
+		items.className = 'yt__timeline__list__items';
+		items.style.width = (ww >= 630) ? (menuInnerWidth / 4) + 'px' : (menuInnerWidth / 2) + 'px';
 		
 
 		box.className = 'yt__timeline__list__items__box';
@@ -197,9 +197,33 @@ function onPlayerReady() {
 				}
 			}
 
+			[].forEach.call(navLinks, function(element) {
+
+				if (element.classList.contains('next')) {
+					if (navCounter === max) {
+						element.classList.remove('active');
+					} else {
+						element.classList.add('active');
+					}
+				}
+
+
+				if (element.classList.contains('prev')) {
+					if (navCounter === min) {
+						element.classList.remove('active');
+					} else {
+						element.classList.add('active');
+					}
+				} 
+
+
+			});
+
+				
+
 			menuList.style.left = -(navCounter * menuInnerWidth) + 'px';
 
-			console.log(ytDataLen + ' vs ' + navCounter);
+			// console.log(ytDataLen + ' vs ' + navCounter);
 		},
 		clickVideoHandler = function(e) {
 			e.preventDefault();
@@ -240,10 +264,15 @@ function onYouTubeIframeAPIReady() {
 		width : '630',
 		videoId : '7V-fIGMDsmE',
 		events : {
-			'onReady' : onPlayerReady
-			// 'onStateChange' : onPlayerStateChange
+			'onReady' : onPlayerReady,
+			'onStateChange' : onPlayerStateChange
 		}
 	});
+}
+
+function onPlayerStateChange(event) {
+	
+	console.log(ytPlayer.getDuration());
 }
 
 
