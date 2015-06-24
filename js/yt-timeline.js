@@ -257,6 +257,11 @@ function onPlayerReady() {
 	});
 }
 
+function ytCheckProgress() {
+	console.log(ytPlayer.getCurrentTime());
+	window.setTimeout(ytCheckProgress, 200);
+}
+
 function onYouTubeIframeAPIReady() {
 	'use strict';
 	ytPlayer = new YT.Player('yt-player', {
@@ -270,9 +275,13 @@ function onYouTubeIframeAPIReady() {
 	});
 }
 
+
+
 function onPlayerStateChange(event) {
-	
-	console.log(ytPlayer.getDuration());
+	if (event.data === YT.PlayerState.PLAYING) {
+		ytCheckProgress();
+		
+	}
 }
 
 
