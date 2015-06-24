@@ -118,6 +118,8 @@ function ytInsertMenu(obj) {
 		element.secondStart = timeToSeconds;
 
 		items.className = 'yt__timeline__list__items';
+		// items.setAttribute('data-id', index);
+		items.setAttribute('data-start', element.secondStart);
 		items.style.width = (ww >= 630) ? (menuInnerWidth / 4) + 'px' : (menuInnerWidth / 2) + 'px';
 		
 
@@ -237,7 +239,7 @@ function onPlayerReady() {
 				ytPlayer.playVideo();
 
 				[].forEach.call(menuLinks, function(element, index) {
-					if (index === id) {
+					if (index <= id) {
 						element.parentNode.classList.add('active');
 					} else {
 						element.parentNode.classList.remove('active');
@@ -258,8 +260,26 @@ function onPlayerReady() {
 }
 
 function ytCheckProgress() {
-	console.log(ytPlayer.getCurrentTime());
-	window.setTimeout(ytCheckProgress, 200);
+	// console.log(ytPlayer.getCurrentTime());
+	var duration = ytPlayer.getDuration(),
+		currentTime = ytPlayer.getCurrentTime(),
+		parent = document.getElementById('yt-player').parentNode,
+		items = parent.getElementsByClassName('yt__timeline__list__items');
+
+	if (currentTime < duration) {
+
+		[].forEach.call(items, function(element) {
+			var start = parseInt(element.getAttribute('data-start'), 10);
+			if (currentTime > start) {
+				element.classList.add('active');
+			} else {
+				element.classList.remove('active');
+			}
+		});
+
+		window.setTimeout(ytCheckProgress, 200);
+	}
+		
 }
 
 function onYouTubeIframeAPIReady() {
@@ -278,9 +298,9 @@ function onYouTubeIframeAPIReady() {
 
 
 function onPlayerStateChange(event) {
+
 	if (event.data === YT.PlayerState.PLAYING) {
 		ytCheckProgress();
-		
 	}
 }
 

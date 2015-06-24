@@ -28,6 +28,8 @@
 	vertical-align: top;
 
 	&.active {
+		border-bottom: solid 1px darken(#f00, 10%);
+		
 		.yt__timeline__list__items__box {
 			background-color: darken(#f00, 10%);
 		}
