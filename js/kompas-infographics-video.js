@@ -78,6 +78,8 @@ KompasInfographicsVideos.prototype.initYoutubeTimeline = function (options) {
 		containerParent.removeChild(container);
 
 		document.head.appendChild(ytElScript);
+
+		
 	};
 
 	ytInit();
@@ -88,7 +90,7 @@ KompasInfographicsVideos.prototype.initYoutubeTimeline = function (options) {
 
 function onYouTubePlayerReady() {
 	'use strict';
-	
+
 	if (ytMode) {
 		var container = document.getElementById(ytContainer),
 			parent = container.parentNode,
@@ -100,72 +102,87 @@ function onYouTubePlayerReady() {
 			navCounter = 0,
 			maxCounter = Math.floor(ytData.length / 4),
 			minCounter = 0,
-			clickNavHandler = function (e) {
-				var btn = this,
-					menuWidth = menu.offsetWidth;
-				// console.log(ytData.length);
-				if (btn.classList.contains('next')) {
-					if (navCounter < maxCounter) {
-						navCounter++;
-					} else {
-						navCounter = maxCounter;
-					}
-				}
+			clickNavHandler,
+			insertMenuItems;
 
-				if (btn.classList.contains('prev')) {
-					if (navCounter > minCounter) {
-						navCounter--;
-					} else {
-						navCounter = minCounter;
-					}
-				}
+		clickNavHandler = function () {
+			var btn = this,
+				next = btn.parentNode.getElementsByClassName('next')[0],
+				prev = btn.parentNode.getElementsByClassName('prev')[0],
+				menuWidth = menu.offsetWidth;
 
-				menuList.style.left = -(navCounter * menuWidth) + 'px';
-			},
-			insertMenuItems = function(menuContainer) {
-				var itemsFrag = document.createDocumentFragment(),
-					menuWidth = menu.offsetWidth;
+			if (btn.classList.contains('next')) {
+				if (navCounter < maxCounter) {
+					navCounter++;
+				} else {
+					navCounter = maxCounter;
+				}
+			}
+
+			if (btn.classList.contains('prev')) {
+				if (navCounter > minCounter) {
+					navCounter--;
+				} else {
+					navCounter = minCounter;
+				}
+			}
+
+			if (navCounter === 0) {
+				prev.classList.remove('active');
+			} else if (navCounter === maxCounter) {
+				next.classList.remove('active');
+			} else {
+				next.classList.add('active');
+				prev.classList.add('active');
+			}
+
+			menuList.style.left = -(navCounter * menuWidth) + 'px';
+		};
+
+		insertMenuItems = function(menuContainer) {
+			var itemsFrag = document.createDocumentFragment(),
+				menuWidth = menu.offsetWidth;
 					
-				menuContainer.style.width = ((menuWidth / 4) * ytData.length) + 'px';
+			menuContainer.style.width = ((menuWidth / 4) * ytData.length) + 'px';
+			
+			ytData.forEach(function(element, index) {
+				var items = document.createElement('li'),
+					links = document.createElement('a'),
+					title = document.createElement('span'),
+					speakers = document.createElement('span'),
+					timeStart = document.createElement('span'),
+					box = document.createElement('span');
 				
-				ytData.forEach(function(element, index) {
-					var items = document.createElement('li'),
-						links = document.createElement('a'),
-						title = document.createElement('span'),
-						speakers = document.createElement('span'),
-						timeStart = document.createElement('span'),
-						box = document.createElement('span');
+				items.className = 'kompas-infographics__yt__timeline__list__items';
+				items.style.width = (menuWidth / 4) + 'px';
+				items.setAttribute('data-start', element.secondStart);
 
-					items.className = 'kompas-infographics__yt__timeline__list__items';
-					items.style.width = (menuWidth / 4) + 'px';
-					items.setAttribute('data-start', element.secondStart);
+				links.className = 'kompas-infographics__yt__timeline__list__items__links';
+				links.href = 'https://www.youtube.com/watch?v=' + ytVideoId;
+				links.target = '_blank';
+				links.setAttribute('data-id', index);
 
-					links.className = 'kompas-infographics__yt__timeline__list__items__links';
-					links.href = 'https://www.youtube.com/watch?v=' + ytVideoId;
-					links.target = '_blank';
-					links.setAttribute('data-id', index);
+				title.className = 'kompas-infographics__yt__timeline__list__items__titles';
+				title.textContent = element.title;
+				speakers.className = 'kompas-infographics__yt__timeline__list__items__speakers';
+				speakers.textContent = element.speaker;
+				timeStart.className = 'kompas-infographics__yt__timeline__list__items__time__start';
+				timeStart.textContent = element.start;
+				box.className = 'kompas-infographics__yt__timeline__list__items__box';
 
-					title.className = 'kompas-infographics__yt__timeline__list__items__titles';
-					title.textContent = element.title;
-					speakers.className = 'kompas-infographics__yt__timeline__list__items__speakers';
-					speakers.textContent = element.speaker;
-					timeStart.className = 'kompas-infographics__yt__timeline__list__items__time__start';
-					timeStart.textContent = element.start;
-					box.className = 'kompas-infographics__yt__timeline__list__items__box';
+				links.appendChild(title);
+				links.appendChild(speakers);
+				links.appendChild(timeStart);
+				links.appendChild(box);
 
+				items.appendChild(links);
 
-					links.appendChild(title);
-					links.appendChild(speakers);
-					links.appendChild(timeStart);
-					links.appendChild(box);
+				itemsFrag.appendChild(items);
+			});
 
-					items.appendChild(links);
+			menuContainer.appendChild(itemsFrag);
 
-					itemsFrag.appendChild(items);
-				});
-
-				menuContainer.appendChild(itemsFrag);
-			};
+		};
 
 		menu.className = 'kompas-infographics__yt__timeline__menu';
 		menuList.className = 'kompas-infographics__yt__timeline__list';
