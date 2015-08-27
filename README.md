@@ -22,7 +22,7 @@ Repositori ini digunakan untuk menampilkan pemutar video dari YouTube beserta na
                         {
                             title: 'Ikhtisar', // judul navigasi linimasa
                             speaker: 'Sundar Pichai', // nama pembicara
-                            start: '00:03:32', // waktu mulai pembicara bersangkutan muncul di video
+                            start: '00:03:32', // waktu mulai pembicara bersangkutan muncul di video, format hh:mm:ss
                             secondStart: null // jangan diubah-ubah
                         },
                         {
