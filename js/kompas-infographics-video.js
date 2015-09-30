@@ -28,7 +28,7 @@ KompasInfographicsVideos.prototype.initiateVideo = function () {
 	'use strict';
 	var css = document.createElement('link');
 	css.rel = 'stylesheet';
-	css.href = 'css/kompas-infographics-video.css';
+	css.href = 'http://id.infografik.print.kompas.com/libs/css/kompas-infographics-video.css';
 	css.type = 'text/css';
 	document.head.appendChild(css);
 
